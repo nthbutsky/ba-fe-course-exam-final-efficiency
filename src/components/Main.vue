@@ -26,7 +26,7 @@
     <v-app-bar app>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-      <v-toolbar-title>Your list of to-dos</v-toolbar-title>
+      <v-toolbar-title>toolbar title</v-toolbar-title>
     </v-app-bar>
 
     <v-main>

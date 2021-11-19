@@ -30,17 +30,16 @@
     </v-app-bar>
 
     <v-main>
-      <v-container fluid>
-        <!--   -->
-      </v-container>
+      <v-container fluid> </v-container>
     </v-main>
   </v-app>
 </template>
 
 <script>
 import { authService } from "../api/authentication";
+
 export default {
-  name: "HelloWorld",
+  name: "Main",
 
   data: () => ({
     drawer: null,

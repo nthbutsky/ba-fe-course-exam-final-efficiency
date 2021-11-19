@@ -18,94 +18,48 @@ const router = new Router({
       name: "Home",
       component: Home,
       meta: { requiresAuth: true },
-      beforeEnter: (to, from, next) => {
-        if (getAuth(app).currentUser === null) {
-          next({ name: "UserLogin" });
-        } else {
-          next();
-        }
-      },
     },
     {
       path: "/login",
       name: "UserLogin",
       component: UserLogin,
-
-      beforeEnter: (to, from, next) => {
-        if (getAuth(app).currentUser !== null) {
-          next({ name: "Home" });
-        } else {
-          next();
-        }
-      },
+      meta: { requiresGuest: true },
     },
     {
       path: "/signup",
       name: "UserSignup",
       component: UserSignup,
-
-      beforeEnter: (to, from, next) => {
-        if (getAuth(app).currentUser !== null) {
-          next({ name: "Home" });
-        } else {
-          next();
-        }
-      },
+      meta: { requiresGuest: true },
     },
     {
       path: "/:catchAll(.*)",
       name: "NotFound",
       component: NotFound,
+      meta: { requiresGuest: true },
     },
   ],
 });
 
-// router.beforeEach((to, from, next) => {
-//   // Check for requiresAuth guard
-//   if (to.matched.some((record) => record.meta.requiresAuth)) {
-//     // Check if NO logged user
-//     if (!getAuth(app).currentUser) {
-//       // Go to login
-//       next({
-//         path: "/login",
-//         query: {
-//           redirect: to.fullPath,
-//         },
-//       });
-//     } else {
-//       // Proceed to route
-//       next();
-//     }
-//   } else if (to.matched.some((record) => record.meta.requiresGuest)) {
-//     // Check if NO logged user
-//     if (getAuth(app).currentUser) {
-//       // Go to login
-//       next({
-//         path: "/",
-//         query: {
-//           redirect: to.fullPath,
-//         },
-//       });
-//     } else {
-//       // Proceed to route
-//       next();
-//     }
-//   } else {
-//     // Proceed to route
-//     next();
-//   }
-// });
-
-// router.beforeEach((to, from, next) => {
-//   const currentUser = getAuth(app).currentUser;
-//   const isAuth = to.matched.some((record) => record.meta.requiresAuth);
-//   console.log(currentUser);
-//   console.log(isAuth);
-//   if (isAuth && !currentUser) {
-//     next({ name: "UserLogin" });
-//   } else {
-//     next();
-//   }
-// });
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (getAuth(app).currentUser === null) {
+      next({
+        name: "UserLogin",
+      });
+    } else {
+      next();
+    }
+  } else if (to.matched.some((record) => record.meta.requiresGuest)) {
+    if (getAuth(app).currentUser !== null) {
+      next({
+        name: "Home",
+      });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
 
 export default router;

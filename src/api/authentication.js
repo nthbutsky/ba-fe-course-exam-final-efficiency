@@ -14,6 +14,7 @@ export const authService = {
       const auth = getAuth(app);
       await createUserWithEmailAndPassword(auth, email, password).then(
         (userCredential) => {
+          router.replace("/");
           console.log(
             `USER ${userCredential.user.email} HAS BEEN SUCCESFULLY CREATED!`
           );
@@ -29,6 +30,7 @@ export const authService = {
       const auth = getAuth(app);
       await signInWithEmailAndPassword(auth, email, password).then(
         (userCredential) => {
+          router.replace("/");
           console.log(
             `USER ${userCredential.user.email} HAS BEEN SUCCESFULLY LOGGED IN!`
           );
@@ -43,6 +45,7 @@ export const authService = {
     try {
       const auth = getAuth(app);
       await signOut(auth).then(() => {
+        router.replace("/login");
         console.log("logged out");
       });
     } catch (error) {
@@ -50,7 +53,7 @@ export const authService = {
     }
   },
 
-  checkUserState() {
+  async checkUserState() {
     try {
       const auth = getAuth(app);
       onAuthStateChanged(auth, (user) => {

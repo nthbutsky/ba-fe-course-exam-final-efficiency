@@ -1,94 +1,39 @@
 <template>
-  <v-app>
-    <v-app-bar color="deep-purple accent-4" app dark prominent>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+  <v-app id="inspire">
+    <v-navigation-drawer v-model="drawer" app>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title class="text-h6"> Efficiency </v-list-item-title>
+          <v-list-item-subtitle> Save your time </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
 
-      <v-toolbar-title>My files</v-toolbar-title>
-      <v-spacer></v-spacer>
+      <v-divider></v-divider>
 
-      <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
+      <v-list dense nav>
+        <v-list-item v-for="item in items" :key="item.title" link>
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
 
-      <v-btn icon>
-        <v-icon>mdi-filter</v-icon>
-      </v-btn>
-
-      <v-btn icon>
-        <v-icon>mdi-dots-vertical</v-icon>
-      </v-btn>
-    </v-app-bar>
-
-    <v-navigation-drawer v-model="drawer" app absolute bottom temporary>
-      <v-list nav dense>
-        <v-list-item-group
-          v-model="group"
-          active-class="deep-purple--text text--accent-4"
-        >
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-view-dashboard</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Foo</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-view-dashboard</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Bar</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-view-dashboard</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Fizz</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-view-dashboard</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Buzz</v-list-item-title>
-          </v-list-item>
-        </v-list-item-group>
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
-      <template v-slot:append>
-        <div class="pa-2">
-          <v-btn block> Logout </v-btn>
-        </div>
-      </template>
     </v-navigation-drawer>
 
-    <!-- Sizes your content based upon application components -->
+    <v-app-bar app>
+      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+
+      <v-toolbar-title>Your list of to-dos</v-toolbar-title>
+    </v-app-bar>
+
     <v-main>
-      <!-- Provides the application the proper gutter -->
       <v-container fluid>
-        <v-row>
-          <v-col align="end">
-            <v-btn @click.prevent="logOut" color="primary">Log Out</v-btn>
-          </v-col>
-        </v-row>
-        <v-container fill-height fluid>
-          <v-row align="center" justify="center">
-            <v-col>
-              <v-img
-                :src="require('../assets/logo.svg')"
-                class="my-3"
-                contain
-                height="200"
-            /></v-col>
-          </v-row>
-        </v-container>
-        <!-- If using vue-router -->
-        <!-- <router-view></router-view> -->
+        <!--   -->
       </v-container>
     </v-main>
-
-    <v-footer app>
-      <!-- -->
-    </v-footer>
   </v-app>
 </template>
 
@@ -98,15 +43,20 @@ export default {
   name: "HelloWorld",
 
   data: () => ({
-    drawer: false,
-    group: null,
+    drawer: null,
+    items: [
+      { title: "To-dos", icon: "mdi-format-list-checks" },
+      { title: "Notes", icon: "mdi-notebook-edit-outline" },
+      { title: "Pomodoro", icon: "mdi-av-timer" },
+      { title: "Weather", icon: "mdi-weather-partly-cloudy" },
+      { title: "News", icon: "mdi-newspaper" },
+      { title: "Clocks", icon: "mdi-web-clock" },
+      { title: "Currrency", icon: "mdi-currency-usd" },
+      { title: "Music", icon: "mdi-music" },
+      { title: "Finances", icon: "mdi-finance" },
+    ],
+    right: null,
   }),
-
-  watch: {
-    group() {
-      this.drawer = false;
-    },
-  },
 
   methods: {
     logOut() {

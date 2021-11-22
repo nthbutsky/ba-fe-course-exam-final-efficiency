@@ -52,7 +52,6 @@ export const dbService = {
 
   async deleteToDB(task) {
     const dbDoc = doc(db, "todos", `${task.id}`);
-    console.log(task.id);
     try {
       await deleteDoc(dbDoc);
     } catch (e) {

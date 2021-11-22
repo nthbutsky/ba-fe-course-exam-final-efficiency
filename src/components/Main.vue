@@ -26,20 +26,27 @@
     <v-app-bar app>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-      <v-toolbar-title>toolbar title</v-toolbar-title>
+      <v-toolbar-title>Your list of to-dos</v-toolbar-title>
     </v-app-bar>
 
     <v-main>
-      <v-container fluid> </v-container>
+      <v-container fluid>
+        <Todos />
+      </v-container>
     </v-main>
   </v-app>
 </template>
 
 <script>
 import { authService } from "../api/authentication";
+import Todos from "../components/Todos";
 
 export default {
   name: "Main",
+
+  components: {
+    Todos,
+  },
 
   data: () => ({
     drawer: null,

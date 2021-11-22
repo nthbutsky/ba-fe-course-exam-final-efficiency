@@ -86,6 +86,7 @@
 </template>
 
 <script>
+import { dbService } from "../api/firestore";
 export default {
   name: "Todos",
 
@@ -120,6 +121,7 @@ export default {
     doneTask(id) {
       const task = this.tasks.filter((task) => task.id === id)[0];
       task.done = !task.done;
+      dbService.updateToDB(task);
     },
 
     addTask() {
@@ -134,11 +136,14 @@ export default {
         this.tasks.push(newTask);
         this.newTaskTitle = "";
         this.chooseRandomPlaceholder();
+        dbService.addToDB(newTask);
       }
     },
 
     deleteTask(id) {
+      const taskToBeDeleted = this.tasks.filter((task) => task.id === id);
       this.tasks = this.tasks.filter((task) => task.id !== id);
+      dbService.deleteToDB(taskToBeDeleted[0]);
     },
 
     editTask(id) {
@@ -153,7 +158,13 @@ export default {
       )[0];
       confirmedEdit.title = this.editedTask;
       this.dialog = false;
+      dbService.updateToDB(confirmedEdit);
     },
+  },
+
+  async mounted() {
+    const arrFromDB = await dbService.getFromDB();
+    this.tasks = arrFromDB;
   },
 };
 </script>

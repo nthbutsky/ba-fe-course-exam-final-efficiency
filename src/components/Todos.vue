@@ -66,7 +66,7 @@
             <v-text-field
               v-model="editedTask"
               class="pa-6"
-              label="Don't leave it empty"
+              label="Don't leave it empty, add some task!"
             ></v-text-field>
 
             <v-card-actions class="px-5">
@@ -91,9 +91,9 @@ export default {
 
   data() {
     return {
-      newTaskTitle: null,
+      newTaskTitle: "",
       tasks: [],
-      randomPlaceholder: null,
+      randomPlaceholder: "",
       placeholders: [
         "buy a helicopter",
         "learn to swear",
@@ -103,7 +103,7 @@ export default {
         "stay humble whatever",
       ],
       dialog: false,
-      editedTask: null,
+      editedTask: "",
       editedTaskId: null,
     };
   },
@@ -128,8 +128,13 @@ export default {
         title: this.newTaskTitle,
         done: false,
       };
-      this.tasks.push(newTask);
-      this.newTaskTitle = null;
+      if (this.newTaskTitle.length === 0) {
+        return;
+      } else {
+        this.tasks.push(newTask);
+        this.newTaskTitle = "";
+        this.chooseRandomPlaceholder();
+      }
     },
 
     deleteTask(id) {

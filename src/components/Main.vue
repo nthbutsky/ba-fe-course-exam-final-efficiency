@@ -11,13 +11,18 @@
       <v-divider></v-divider>
 
       <v-list dense nav>
-        <v-list-item v-for="item in items" :key="item.title" link>
+        <v-list-item
+          v-for="menuItem in menuItems"
+          :key="menuItem.index"
+          :to="menuItem.link"
+          link
+        >
           <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
+            <v-icon>{{ menuItem.icon }}</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-list-item-title>{{ menuItem.name }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -34,7 +39,15 @@
     <v-app-bar app>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-      <v-toolbar-title>Your list of to-dos</v-toolbar-title>
+      <v-toolbar-title>{{ toolbarTitle }}</v-toolbar-title>
+
+      <v-spacer></v-spacer>
+      <v-chip class="ma-2">
+        {{ currentUser }}
+        <v-avatar right>
+          <v-icon>mdi-account-circle</v-icon>
+        </v-avatar>
+      </v-chip>
     </v-app-bar>
 
     <v-main>
@@ -53,19 +66,64 @@ export default {
 
   data: () => ({
     drawer: null,
-    items: [
-      { title: "To-dos", icon: "mdi-format-list-checks" },
-      { title: "Notes", icon: "mdi-notebook-edit-outline" },
-      { title: "Pomodoro", icon: "mdi-av-timer" },
-      { title: "Weather", icon: "mdi-weather-partly-cloudy" },
-      { title: "News", icon: "mdi-newspaper" },
-      { title: "Clocks", icon: "mdi-web-clock" },
-      { title: "Currrency", icon: "mdi-currency-usd" },
-      { title: "Music", icon: "mdi-music" },
-      { title: "Finances", icon: "mdi-finance" },
+    menuItems: [
+      {
+        name: "To-dos",
+        icon: "mdi-format-list-checks",
+        link: "/todos",
+        title: "Your to-do list",
+      },
+      {
+        name: "Notes",
+        icon: "mdi-notebook-edit-outline",
+        link: "/notes",
+        title: "Your notes",
+      },
+      {
+        name: "Pomodoro",
+        icon: "mdi-av-timer",
+        link: "/pomodoro",
+        title: "Your",
+      },
+      {
+        name: "Weather",
+        icon: "mdi-weather-partly-cloudy",
+        link: "/weather",
+        title: "Your",
+      },
+      { name: "News", icon: "mdi-newspaper", link: "/news", title: "Your" },
+      { name: "Clocks", icon: "mdi-web-clock", link: "/clocks", title: "Your" },
+      {
+        name: "Currrency",
+        icon: "mdi-currency-usd",
+        link: "/currency",
+        title: "Your",
+      },
+      { name: "Music", icon: "mdi-music", link: "/music", title: "Your" },
+      {
+        name: "Finances",
+        icon: "mdi-finance",
+        link: "/finances",
+        title: "Your",
+      },
     ],
     right: null,
   }),
+
+  computed: {
+    currentUser: function () {
+      return this.$store.state.user;
+    },
+
+    toolbarTitle: function () {
+      const currentRoute = this.$router.currentRoute.path;
+      const requiredItem = this.menuItems.find(
+        (item) => item.link === currentRoute
+      );
+      const requiredIndex = this.menuItems.indexOf(requiredItem);
+      return this.menuItems[requiredIndex].title;
+    },
+  },
 
   methods: {
     logOut() {

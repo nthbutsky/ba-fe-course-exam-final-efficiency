@@ -28,8 +28,6 @@
 </template>
 
 <script>
-import authService from "../api/authentication";
-
 export default {
   name: "UserSignup",
 
@@ -43,7 +41,11 @@ export default {
 
   methods: {
     signUp() {
-      authService.signUp(this.email, this.password);
+      const user = {
+        email: this.email,
+        password: this.password,
+      };
+      this.$store.dispatch("signUpAction", user);
     },
   },
 };

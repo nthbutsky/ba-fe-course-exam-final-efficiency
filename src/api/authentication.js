@@ -30,7 +30,6 @@ const authService = {
       const auth = getAuth(app);
       await signInWithEmailAndPassword(auth, email, password).then(
         (userCredential) => {
-          router.replace("/");
           console.log(
             `USER ${userCredential.user.email} HAS BEEN SUCCESFULLY LOGGED IN!`
           );
@@ -41,6 +40,7 @@ const authService = {
               jwt: userCredential.user.accessToken,
             })
           );
+          router.push("/");
         }
       );
     } catch (error) {
@@ -53,8 +53,8 @@ const authService = {
       const auth = getAuth(app);
       await signOut(auth).then(() => {
         localStorage.clear("user");
-        router.replace("/login");
         console.log("logged out");
+        router.push("/login");
       });
     } catch (error) {
       this.error = error;
@@ -68,7 +68,6 @@ const authService = {
         const name = user.reloadUserInfo.email;
         console.log(`USER ${name} IS SIGNED IN!`);
       } else {
-        router.push("/login");
         console.log("NO USER SIGNED IN!");
       }
     });

@@ -51,26 +51,14 @@ router.beforeEach((to, from, next) => {
   const guest = to.matched.some((record) => record.meta.guest);
   const authenticatedUser = localStorage.getItem("user");
 
-  if (requiresAuth) {
-    if (authenticatedUser) {
-      next();
-    } else {
-      next({
-        path: "/login",
-      });
-    }
-  } else {
-    next();
-  }
-
-  if (guest) {
-    if (authenticatedUser) {
-      next({
-        path: "/",
-      });
-    } else {
-      next();
-    }
+  if (requiresAuth && !authenticatedUser) {
+    next({
+      path: "/login",
+    });
+  } else if (guest && authenticatedUser) {
+    next({
+      path: "/",
+    });
   } else {
     next();
   }

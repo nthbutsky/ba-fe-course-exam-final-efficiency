@@ -39,22 +39,17 @@
 
     <v-main>
       <v-container fluid>
-        <Todos />
+        <router-view></router-view>
       </v-container>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import { authService } from "../api/authentication";
-import Todos from "../components/Todos";
+import authService from "../api/authentication";
 
 export default {
   name: "Main",
-
-  components: {
-    Todos,
-  },
 
   data: () => ({
     drawer: null,
@@ -75,7 +70,6 @@ export default {
   methods: {
     logOut() {
       authService.logOut();
-      this.$router.push("/login");
     },
   },
 };

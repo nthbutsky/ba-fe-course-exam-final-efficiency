@@ -8,13 +8,13 @@ import {
 } from "firebase/auth";
 import router from "../router/router";
 
-export const authService = {
+const authService = {
   async signUp(email, password) {
     try {
       const auth = getAuth(app);
       await createUserWithEmailAndPassword(auth, email, password).then(
         (userCredential) => {
-          router.replace("/");
+          router.replace("/login");
           console.log(
             `USER ${userCredential.user.email} HAS BEEN SUCCESFULLY CREATED!`
           );
@@ -34,6 +34,13 @@ export const authService = {
           console.log(
             `USER ${userCredential.user.email} HAS BEEN SUCCESFULLY LOGGED IN!`
           );
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              uid: userCredential.user.uid,
+              jwt: userCredential.user.accessToken,
+            })
+          );
         }
       );
     } catch (error) {
@@ -45,6 +52,7 @@ export const authService = {
     try {
       const auth = getAuth(app);
       await signOut(auth).then(() => {
+        localStorage.clear("user");
         router.replace("/login");
         console.log("logged out");
       });
@@ -53,21 +61,18 @@ export const authService = {
     }
   },
 
-  async checkUserState() {
-    try {
-      const auth = getAuth(app);
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          const name = user.reloadUserInfo.email;
-          router.push("/");
-          console.log(`USER ${name} IS SIGNED IN!`);
-        } else {
-          router.push("/login");
-          console.log("NO USER SIGNED IN!");
-        }
-      });
-    } catch (error) {
-      this.error = error;
-    }
+  checkUserState() {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const name = user.reloadUserInfo.email;
+        console.log(`USER ${name} IS SIGNED IN!`);
+      } else {
+        router.push("/login");
+        console.log("NO USER SIGNED IN!");
+      }
+    });
   },
 };
+
+export default authService;

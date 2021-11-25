@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { authService } from "../api/authentication";
+import authService from "../api/authentication";
 
 export default {
   name: "UserLogin",

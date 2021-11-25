@@ -1,11 +1,10 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Home from "../views/Home.vue";
+import Todos from "../components/Todos.vue";
 import UserLogin from "../views/UserLogin.vue";
 import UserSignup from "../views/UserSignup.vue";
 import NotFound from "../views/NotFound.vue";
-import { app } from "../api/firebase";
-import { getAuth } from "firebase/auth";
 
 Vue.use(Router);
 
@@ -18,41 +17,56 @@ const router = new Router({
       name: "Home",
       component: Home,
       meta: { requiresAuth: true },
+      children: [
+        {
+          path: "/todos",
+          name: "Todos",
+          component: Todos,
+          meta: { requiresAuth: true },
+        },
+      ],
     },
     {
       path: "/login",
       name: "UserLogin",
       component: UserLogin,
-      meta: { requiresGuest: true },
+      meta: { guest: true },
     },
     {
       path: "/signup",
       name: "UserSignup",
       component: UserSignup,
-      meta: { requiresGuest: true },
+      meta: { guest: true },
     },
     {
       path: "/:catchAll(.*)",
       name: "NotFound",
       component: NotFound,
-      meta: { requiresGuest: true },
     },
   ],
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (getAuth(app).currentUser === null) {
-      next({
-        name: "UserLogin",
-      });
-    } else {
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  const guest = to.matched.some((record) => record.meta.guest);
+  const authenticatedUser = localStorage.getItem("user");
+
+  if (requiresAuth) {
+    if (authenticatedUser) {
       next();
-    }
-  } else if (to.matched.some((record) => record.meta.requiresGuest)) {
-    if (getAuth(app).currentUser !== null) {
+    } else {
       next({
-        name: "Home",
+        path: "/login",
+      });
+    }
+  } else {
+    next();
+  }
+
+  if (guest) {
+    if (authenticatedUser) {
+      next({
+        path: "/",
       });
     } else {
       next();

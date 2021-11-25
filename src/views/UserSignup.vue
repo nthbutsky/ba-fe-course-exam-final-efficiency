@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { authService } from "../api/authentication";
+import authService from "../api/authentication";
 
 export default {
   name: "UserSignup",
@@ -44,7 +44,6 @@ export default {
   methods: {
     signUp() {
       authService.signUp(this.email, this.password);
-      this.$router.push("/");
     },
   },
 };

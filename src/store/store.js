@@ -8,6 +8,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import router from "../router/router";
+import { apiKey } from "../api/weather.config";
 
 Vue.use(Vuex);
 
@@ -107,8 +108,7 @@ export default new Vuex.Store({
       let lon = "";
 
       try {
-        const ipApiKey =
-          "40703b2c595da4fa34a191f37ad363ddb61ab799ed907dcf26d19680";
+        const ipApiKey = apiKey.ip;
         const ipUrlBase = "https://api.ipdata.co";
         const ipResponse = await fetch(`${ipUrlBase}?api-key=${ipApiKey}`);
         const ipData = await ipResponse.json();
@@ -121,7 +121,7 @@ export default new Vuex.Store({
       }
 
       try {
-        const weatherApiKey = "3b1b01bc6be455598f1760293613a3e2";
+        const weatherApiKey = apiKey.weather;
         const weatherUrlBase =
           "https://api.openweathermap.org/data/2.5/onecall";
 

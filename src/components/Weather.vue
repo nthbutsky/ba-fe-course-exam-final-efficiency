@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" max-width="400">
+  <v-card class="mx-auto" max-width="400" v-if="this.weather">
     <v-list-item two-line>
       <v-list-item-content>
         <v-list-item-title class="text-h5">{{ city }}</v-list-item-title>
@@ -15,7 +15,10 @@
           >{{ Math.floor(weather.current.temp) }}&deg;C</v-col
         >
         <v-col cols="6">
-          <v-img :src="currentWeatherIcon" width="92"></v-img>
+          <v-img
+            :src="`http://openweathermap.org/img/wn/${this.weather.current.weather[0].icon}@2x.png`"
+            width="92"
+          ></v-img>
         </v-col>
       </v-row>
     </v-card-text>
@@ -58,14 +61,12 @@
 
         <v-list-item-icon>
           <v-img
-            :src="
-              'http://openweathermap.org/img/wn/' +
-              dailyWeatherItem.weather[0].icon +
-              '@2x.png'
-            "
+            :src="`http://openweathermap.org/img/wn/${dailyWeatherItem.weather[0].icon}@2x.png`"
           ></v-img>
         </v-list-item-icon>
-
+        <v-list-item-subtitle class="text-right">
+          {{ Math.floor(dailyWeatherItem.humidity) }}%
+        </v-list-item-subtitle>
         <v-list-item-subtitle class="text-right">
           {{ Math.floor(dailyWeatherItem.temp.eve) }}&deg;C
         </v-list-item-subtitle>
@@ -81,6 +82,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 export default {
   name: "Weather",
 
@@ -105,23 +107,15 @@ export default {
   },
 
   computed: {
-    weather() {
-      return this.$store.getters.weather;
-    },
+    ...mapGetters(["weather", "city"]),
+  },
 
-    city() {
-      return this.$store.getters.city;
-    },
-
-    currentWeatherIcon() {
-      const url = "http://openweathermap.org/img/wn/";
-      const icon = this.$store.getters.weather.current.weather[0].icon;
-      return url + icon + "@2x" + ".png";
-    },
+  methods: {
+    ...mapActions(["getWeather"]),
   },
 
   mounted() {
-    this.$store.dispatch("getWeather");
+    this.getWeather();
   },
 };
 </script>

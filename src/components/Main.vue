@@ -12,8 +12,8 @@
 
       <v-list dense nav>
         <v-list-item
-          v-for="menuItem in menuItems"
-          :key="menuItem.index"
+          v-for="(menuItem, index) in menuItems"
+          :key="index"
           :to="menuItem.link"
           link
         >
@@ -39,7 +39,7 @@
     <v-app-bar app>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-      <!-- <v-toolbar-title>{{ toolbarTitle }}</v-toolbar-title> -->
+      <v-toolbar-title>{{ this.$router.history.current.name }}</v-toolbar-title>
 
       <v-spacer></v-spacer>
       <v-chip class="ma-2">
@@ -59,6 +59,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 import authService from "../api/authentication";
 
 export default {
@@ -114,21 +115,19 @@ export default {
     currentUser: function () {
       return this.$store.state.user;
     },
-
-    // toolbarTitle: function () {
-    //   const currentRoute = this.$router.currentRoute.path;
-    //   const requiredItem = this.menuItems.find(
-    //     (item) => item.link === currentRoute
-    //   );
-    //   const requiredIndex = this.menuItems.indexOf(requiredItem);
-    //   return this.menuItems[requiredIndex].title;
-    // },
   },
 
   methods: {
+    ...mapMutations(["setUser"]),
     logOut() {
       authService.logOut();
     },
+  },
+
+  mounted() {
+    if (localStorage.getItem("user")) {
+      this.setUser(JSON.parse(localStorage.getItem("user")).uid);
+    }
   },
 };
 </script>

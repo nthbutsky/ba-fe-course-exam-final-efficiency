@@ -39,7 +39,7 @@
     <v-app-bar app>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-      <v-toolbar-title>{{ toolbarTitle }}</v-toolbar-title>
+      <!-- <v-toolbar-title>{{ toolbarTitle }}</v-toolbar-title> -->
 
       <v-spacer></v-spacer>
       <v-chip class="ma-2">
@@ -115,14 +115,14 @@ export default {
       return this.$store.state.user;
     },
 
-    toolbarTitle: function () {
-      const currentRoute = this.$router.currentRoute.path;
-      const requiredItem = this.menuItems.find(
-        (item) => item.link === currentRoute
-      );
-      const requiredIndex = this.menuItems.indexOf(requiredItem);
-      return this.menuItems[requiredIndex].title;
-    },
+    // toolbarTitle: function () {
+    //   const currentRoute = this.$router.currentRoute.path;
+    //   const requiredItem = this.menuItems.find(
+    //     (item) => item.link === currentRoute
+    //   );
+    //   const requiredIndex = this.menuItems.indexOf(requiredItem);
+    //   return this.menuItems[requiredIndex].title;
+    // },
   },
 
   methods: {

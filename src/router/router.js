@@ -3,6 +3,7 @@ import Router from "vue-router";
 import Home from "../views/Home.vue";
 import Todos from "../components/Todos.vue";
 import Notes from "../components/Notes.vue";
+import Weather from "../components/Weather.vue";
 import UserLogin from "../views/UserLogin.vue";
 import UserSignup from "../views/UserSignup.vue";
 import NotFound from "../views/NotFound.vue";
@@ -29,6 +30,12 @@ const router = new Router({
           path: "/notes",
           name: "Notes",
           component: Notes,
+          meta: { requiresAuth: true },
+        },
+        {
+          path: "/weather",
+          name: "Weather",
+          component: Weather,
           meta: { requiresAuth: true },
         },
       ],

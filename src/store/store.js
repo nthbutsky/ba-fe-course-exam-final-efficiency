@@ -17,9 +17,12 @@ export default new Vuex.Store({
     user: null,
     status: null,
     error: null,
-    weather: null,
-    city: null,
+    currentCityWeather: null,
+    specificCityWeather: null,
+    forecast: null,
+    currentCity: null,
   },
+
   mutations: {
     setUser(state, payload) {
       state.user = payload;
@@ -33,13 +36,20 @@ export default new Vuex.Store({
     setError(state, payload) {
       state.error = payload;
     },
-    setWeather(state, payload) {
-      state.weather = payload;
+    setCurrentCityWeather(state, payload) {
+      state.currentCityWeather = payload;
     },
-    setCity(state, payload) {
-      state.city = payload;
+    setSpecificCityWeather(state, payload) {
+      state.specificCityWeather = payload;
+    },
+    setForecast(state, payload) {
+      state.forecast = payload;
+    },
+    setCurrentCity(state, payload) {
+      state.currentCity = payload;
     },
   },
+
   actions: {
     signUpAction({ commit }, payload) {
       commit("setStatus", "loading");
@@ -103,7 +113,7 @@ export default new Vuex.Store({
         });
     },
 
-    async getWeather({ commit }) {
+    async getCurrentCityWeather({ commit }) {
       let lat = "";
       let lon = "";
 
@@ -115,7 +125,7 @@ export default new Vuex.Store({
         console.log(ipData);
         lat = await ipData.latitude;
         lon = await ipData.longitude;
-        commit("setCity", ipData.city);
+        commit("setCurrentCity", ipData.city);
       } catch (error) {
         commit("setError", error.message);
       }
@@ -130,7 +140,47 @@ export default new Vuex.Store({
         );
         const weatherData = await weatherResponse.json();
         console.log(weatherData);
-        commit("setWeather", weatherData);
+        console.log(weatherData.daily);
+        commit("setCurrentCityWeather", weatherData.current);
+        commit("setForecast", weatherData.daily);
+      } catch (error) {
+        commit("setError", error.message);
+      }
+    },
+
+    async searchCityWeather({ commit }, payload) {
+      let lat = "";
+      let lon = "";
+
+      try {
+        const weatherApiKey = apiKey.weather;
+        const weatherUrlBase =
+          "https://api.openweathermap.org/data/2.5/weather";
+
+        const weatherResponse = await fetch(
+          `${weatherUrlBase}?q=${payload}&appid=${weatherApiKey}&units=metric`
+        );
+        const weatherData = await weatherResponse.json();
+        lat = weatherData.coord.lat;
+        lon = weatherData.coord.lon;
+        console.log(weatherData);
+        commit("setCurrentCity", payload);
+        commit("setCurrentCityWeather", weatherData);
+      } catch (error) {
+        commit("setError", error.message);
+      }
+
+      try {
+        const weatherApiKey = apiKey.weather;
+        const weatherUrlBase =
+          "https://api.openweathermap.org/data/2.5/onecall";
+        const weatherResponse = await fetch(
+          `${weatherUrlBase}?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`
+        );
+        const weatherData = await weatherResponse.json();
+        console.log(weatherData);
+        commit("setCurrentCityWeather", weatherData.current);
+        commit("setForecast", weatherData.daily);
       } catch (error) {
         commit("setError", error.message);
       }
@@ -141,21 +191,23 @@ export default new Vuex.Store({
     user(state) {
       return state.user;
     },
-
     status(state) {
       return state.status;
     },
-
     error(state) {
       return state.error;
     },
-
-    weather(state) {
-      return state.weather;
+    currentCityWeather(state) {
+      return state.currentCityWeather;
     },
-
-    city(state) {
-      return state.city;
+    specificCityWeather(state) {
+      return state.specificCityWeather;
+    },
+    currentCity(state) {
+      return state.currentCity;
+    },
+    forecast(state) {
+      return state.forecast;
     },
   },
 

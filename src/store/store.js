@@ -9,23 +9,35 @@ import {
 } from "firebase/auth";
 import router from "../router/router";
 import { apiKey } from "../api/weather.config";
+import { newsApiKey } from "../api/news.config";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { db } from "../api/firebase";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     user: null,
+    userUid: null,
+    userName: null,
     status: null,
     error: null,
     currentCityWeather: null,
     specificCityWeather: null,
     forecast: null,
     currentCity: null,
+    news: null,
   },
 
   mutations: {
     setUser(state, payload) {
       state.user = payload;
+    },
+    setUserName(state, payload) {
+      state.userName = payload;
+    },
+    setUserUid(state, payload) {
+      state.userUid = payload;
     },
     removeUser(state) {
       state.user = null;
@@ -48,6 +60,9 @@ export default new Vuex.Store({
     setCurrentCity(state, payload) {
       state.currentCity = payload;
     },
+    setNews(state, payload) {
+      state.news = payload;
+    },
   },
 
   actions: {
@@ -59,13 +74,20 @@ export default new Vuex.Store({
         payload.password
       )
         .then((response) => {
-          commit("setUser", response.user.uid);
+          commit("setUserUid", response.user.uid);
           commit("setStatus", "success");
           commit("setError", null);
           router.replace("/login");
           console.log(
             `USER ${response.user.email} HAS BEEN SUCCESSFULLY CREATED!`
           );
+
+          const dbDoc = doc(db, "users", `${response.user.uid}`);
+          setDoc(dbDoc, {
+            uid: response.user.uid,
+            name: null,
+            email: response.user.email,
+          });
         })
         .catch((error) => {
           commit("setStatus", "failure");
@@ -76,7 +98,7 @@ export default new Vuex.Store({
     signInAction({ commit }, payload) {
       signInWithEmailAndPassword(getAuth(app), payload.email, payload.password)
         .then((response) => {
-          commit("setUser", response.user.uid);
+          commit("setUser", response.user.email);
           commit("setStatus", "success");
           commit("setError", null);
           console.log(
@@ -87,6 +109,7 @@ export default new Vuex.Store({
             JSON.stringify({
               uid: response.user.uid,
               jwt: response.user.accessToken,
+              email: response.user.email,
             })
           );
           router.push("/");
@@ -104,7 +127,7 @@ export default new Vuex.Store({
           commit("setStatus", "success");
           commit("setError", null);
           localStorage.clear("user");
-          console.log("logged out");
+          console.log("USER LOGGED OUT!");
           router.push("/login");
         })
         .catch((error) => {
@@ -122,7 +145,7 @@ export default new Vuex.Store({
         const ipUrlBase = "https://api.ipdata.co";
         const ipResponse = await fetch(`${ipUrlBase}?api-key=${ipApiKey}`);
         const ipData = await ipResponse.json();
-        console.log(ipData);
+        // console.log(ipData);
         lat = await ipData.latitude;
         lon = await ipData.longitude;
         commit("setCurrentCity", ipData.city);
@@ -139,8 +162,8 @@ export default new Vuex.Store({
           `${weatherUrlBase}?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`
         );
         const weatherData = await weatherResponse.json();
-        console.log(weatherData);
-        console.log(weatherData.daily);
+        // console.log(weatherData);
+        // console.log(weatherData.daily);
         commit("setCurrentCityWeather", weatherData.current);
         commit("setForecast", weatherData.daily);
       } catch (error) {
@@ -163,7 +186,7 @@ export default new Vuex.Store({
         const weatherData = await weatherResponse.json();
         lat = weatherData.coord.lat;
         lon = weatherData.coord.lon;
-        console.log(weatherData);
+        // console.log(weatherData);
         commit("setCurrentCity", payload);
         commit("setCurrentCityWeather", weatherData);
       } catch (error) {
@@ -178,9 +201,31 @@ export default new Vuex.Store({
           `${weatherUrlBase}?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`
         );
         const weatherData = await weatherResponse.json();
-        console.log(weatherData);
+        // console.log(weatherData);
         commit("setCurrentCityWeather", weatherData.current);
         commit("setForecast", weatherData.daily);
+      } catch (error) {
+        commit("setError", error.message);
+      }
+    },
+
+    addUserName({ commit }, payload) {
+      const userUid = JSON.parse(localStorage.getItem("user")).uid;
+      const dbDoc = doc(db, "users", `${userUid}`);
+      updateDoc(dbDoc, { name: payload });
+      localStorage.setItem("name", payload);
+      commit("setUserName", payload);
+    },
+
+    async getNews({ commit }) {
+      try {
+        const apiKey = newsApiKey;
+        const newsUrlBase =
+          "https://api.nytimes.com/svc/topstories/v2/arts.json?api-key=";
+        const newsResponse = await fetch(newsUrlBase + apiKey);
+        const newsData = await newsResponse.json();
+        // console.log(newsData);
+        commit("setNews", newsData);
       } catch (error) {
         commit("setError", error.message);
       }
@@ -190,6 +235,9 @@ export default new Vuex.Store({
   getters: {
     user(state) {
       return state.user;
+    },
+    userName(state) {
+      return state.userName;
     },
     status(state) {
       return state.status;
@@ -208,6 +256,9 @@ export default new Vuex.Store({
     },
     forecast(state) {
       return state.forecast;
+    },
+    news(state) {
+      return state.news;
     },
   },
 

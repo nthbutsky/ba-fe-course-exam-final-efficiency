@@ -11,12 +11,18 @@
               placeholder="password"
               v-model="password"
             />
-            <v-btn block color="primary" type="submit">sign Up</v-btn>
+            <v-btn block color="secondary" type="submit">sign Up</v-btn>
             <v-col>
               <router-link :to="{ name: 'UserLogin' }"
                 >Already have account?</router-link
               >
+              <v-col>
+                <v-btn outlined small block color="secondary" @click="LogInTest"
+                  >try without account</v-btn
+                >
+              </v-col>
             </v-col>
+
             <v-col align="left">
               <v-alert v-if="error" type="error">{{ error }}</v-alert>
             </v-col>
@@ -28,6 +34,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   name: "UserSignup",
 
@@ -40,12 +47,22 @@ export default {
   },
 
   methods: {
+    ...mapActions(["signUpAction", "signInAction"]),
+
     signUp() {
       const user = {
         email: this.email,
         password: this.password,
       };
-      this.$store.dispatch("signUpAction", user);
+      this.signUpAction(user);
+    },
+
+    LogInTest() {
+      const user = {
+        email: "test@account.com",
+        password: 123456,
+      };
+      this.signInAction(user);
     },
   },
 };

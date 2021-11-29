@@ -3,6 +3,7 @@ node_modules
 /dist
 firebase.config.js
 weather.config.js
+news.config.js
 
 
 # local env files

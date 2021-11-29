@@ -17,12 +17,12 @@
       <div v-for="task in tasks" :key="task.id">
         <v-list-item
           @click="doneTask(task.id)"
-          :class="{ 'blue lighten-5': task.done }"
+          :class="{ 'grey lighten-3': task.done }"
         >
           <template v-slot:default>
             <v-list-item-action class="mr-4" :class="{ hidden: task.done }">
               <v-btn @click.stop="editTask(task.id), (dialog = true)" icon>
-                <v-icon color="primary lighten-1">mdi-pencil-outline</v-icon>
+                <v-icon color="secondary">mdi-pencil-outline</v-icon>
               </v-btn>
             </v-list-item-action>
 
@@ -33,7 +33,7 @@
               <v-checkbox
                 class="hidden"
                 :input-value="task.done"
-                color="primary"
+                color="secondary"
                 :class="{ visible: task.done }"
               ></v-checkbox>
             </v-list-item-action>
@@ -47,7 +47,9 @@
 
             <v-list-item-action>
               <v-btn @click.stop="deleteTask(task.id)" icon>
-                <v-icon color="primary lighten-1">mdi-trash-can-outline</v-icon>
+                <v-icon color="secondary lighten-1"
+                  >mdi-trash-can-outline</v-icon
+                >
               </v-btn>
             </v-list-item-action>
           </template>
@@ -70,11 +72,11 @@
             ></v-text-field>
 
             <v-card-actions class="px-5">
-              <v-btn color="green darken-1" text @click="dialog = false">
+              <v-btn color="secondary" text @click="dialog = false">
                 No, go back
               </v-btn>
 
-              <v-btn color="green darken-1" text @click="confirmEdit">
+              <v-btn color="secondary" text @click="confirmEdit">
                 Done editing
               </v-btn>
             </v-card-actions>

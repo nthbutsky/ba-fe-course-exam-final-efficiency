@@ -23,44 +23,121 @@
 
           <v-list-item-content>
             <v-list-item-title>{{ menuItem.name }}</v-list-item-title>
+            <v-list-item-subtitle class="accent--text">{{
+              menuItem.text
+            }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list>
 
       <template v-slot:append>
         <div class="pa-2">
-          <v-btn @click="logOut" block color="primary" type="submit"
+          <v-btn
+            elevation="12"
+            @click="signOutAction"
+            block
+            :color="currentColor"
+            type="submit"
             >logout</v-btn
           >
         </div>
       </template>
     </v-navigation-drawer>
 
-    <v-app-bar app>
+    <v-app-bar elevation="12" :color="currentColor" app dark>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
       <v-toolbar-title>{{ this.$router.history.current.name }}</v-toolbar-title>
 
       <v-spacer></v-spacer>
-      <v-chip class="ma-2">
+
+      <v-chip @click="nameChange = true" class="ma-2" outlined color="white">
         {{ currentUser }}
         <v-avatar right>
           <v-icon>mdi-account-circle</v-icon>
         </v-avatar>
       </v-chip>
+
+      <v-spacer></v-spacer>
+
+      <v-chip @click="colorPicker = true" class="ma-2" color="white" outlined>
+        <v-avatar center>
+          <v-icon>mdi-palette</v-icon>
+        </v-avatar>
+      </v-chip>
     </v-app-bar>
 
     <v-main>
-      <v-container fluid>
-        <router-view></router-view>
+      <v-container fluid fill-height>
+        <v-row
+          v-if="this.$router.history.current.name === 'Home'"
+          align="center"
+          justify="center"
+          class="text-center"
+        >
+          <v-col align="center">
+            <v-col class="text-h2">Welcome back</v-col>
+            <v-col class="text-h4">
+              {{ currentUser }}
+            </v-col>
+          </v-col>
+        </v-row>
+
+        <v-row v-show="this.$router.history.current.name !== 'Home'">
+          <v-col>
+            <router-view></router-view>
+          </v-col>
+        </v-row>
       </v-container>
     </v-main>
+    <v-container>
+      <v-row justify="center">
+        <v-dialog v-model="nameChange" max-width="350">
+          <v-card>
+            <v-card-title class="text-h6">Please add/change name</v-card-title>
+
+            <v-text-field
+              @keyup.enter="addUserName(newUserName), (nameChange = false)"
+              v-model="newUserName"
+              class="pa-6"
+              label="Choose any name you want!"
+            ></v-text-field>
+
+            <v-card-actions class="px-5">
+              <v-spacer></v-spacer>
+
+              <v-btn color="primary" text @click="nameChange = false">
+                Cancel
+              </v-btn>
+
+              <v-btn
+                color="primary"
+                text
+                @click="addUserName(newUserName), (nameChange = false)"
+              >
+                Done
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-row>
+    </v-container>
+    <v-container>
+      <v-row justify="center">
+        <v-dialog v-model="colorPicker" max-width="350">
+          <v-color-picker
+            dot-size="50"
+            swatches-max-height="200"
+            v-model="selectedColor"
+          ></v-color-picker>
+        </v-dialog>
+      </v-row>
+    </v-container>
   </v-app>
 </template>
 
 <script>
-import { mapMutations } from "vuex";
-import authService from "../api/authentication";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "Main",
@@ -69,66 +146,103 @@ export default {
     drawer: null,
     menuItems: [
       {
-        name: "To-dos",
+        name: "Todos",
         icon: "mdi-format-list-checks",
         link: "/todos",
-        title: "Your to-do list",
       },
       {
-        name: "Notes",
-        icon: "mdi-notebook-edit-outline",
-        link: "/notes",
-        title: "Your notes",
-      },
-      {
-        name: "Pomodoro",
-        icon: "mdi-av-timer",
-        link: "/pomodoro",
-        title: "Your",
+        name: "Calendar",
+        icon: "mdi-calendar-clock",
+        link: "/calendar",
       },
       {
         name: "Weather",
         icon: "mdi-weather-partly-cloudy",
         link: "/weather",
-        title: "Your",
       },
-      { name: "News", icon: "mdi-newspaper", link: "/news", title: "Your" },
-      { name: "Clocks", icon: "mdi-web-clock", link: "/clocks", title: "Your" },
+      {
+        name: "News",
+        icon: "mdi-newspaper",
+        link: "/news",
+      },
+      {
+        name: "Clocks",
+        icon: "mdi-web-clock",
+        //  link: "/clocks"
+        text: "coming soon",
+        option: "disabled",
+      },
+      {
+        name: "Pomodoro",
+        icon: "mdi-av-timer",
+        // link: "/pomodoro",
+        text: "coming soon",
+        option: "disabled",
+      },
       {
         name: "Currrency",
         icon: "mdi-currency-usd",
-        link: "/currency",
-        title: "Your",
+        // link: "/currency",
+        text: "coming soon",
+        option: "disabled",
       },
-      { name: "Music", icon: "mdi-music", link: "/music", title: "Your" },
+      {
+        name: "Music",
+        icon: "mdi-music",
+        // link: "/music",
+        text: "coming soon",
+        option: "disabled",
+      },
       {
         name: "Finances",
         icon: "mdi-finance",
-        link: "/finances",
-        title: "Your",
+        // link: "/finances",
+        text: "coming soon",
+        option: "disabled",
       },
     ],
     right: null,
+    nameChange: false,
+    colorPicker: false,
+    newUserName: "",
+    selectedColor: null,
   }),
 
   computed: {
+    ...mapGetters(["user", "userName"]),
+
     currentUser: function () {
-      return this.$store.state.user;
+      if (this.userName === null || "") {
+        return this.user;
+      } else {
+        return this.userName;
+      }
+    },
+
+    currentColor: function () {
+      if (this.selectedColor === null) {
+        return "secondary";
+      } else {
+        localStorage.setItem("color", this.selectedColor.hex);
+        return this.selectedColor.hex;
+      }
     },
   },
 
   methods: {
-    ...mapMutations(["setUser"]),
-    logOut() {
-      authService.logOut();
-    },
+    ...mapMutations(["setUser", "setUserName"]),
+    ...mapActions(["signOutAction", "addUserName"]),
   },
 
   mounted() {
     if (localStorage.getItem("user")) {
-      this.setUser(JSON.parse(localStorage.getItem("user")).uid);
+      this.setUser(JSON.parse(localStorage.getItem("user")).email);
+    }
+    if (localStorage.getItem("name")) {
+      this.setUserName(localStorage.getItem("name"));
     }
   },
 };
 </script>
 
+<style lang="scss"></style>

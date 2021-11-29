@@ -82,7 +82,7 @@
           class="text-center"
         >
           <v-col align="center">
-            <v-col class="text-h2">Welcome back</v-col>
+            <v-col class="text-h2">Welcome</v-col>
             <v-col class="text-h4">
               {{ currentUser }}
             </v-col>

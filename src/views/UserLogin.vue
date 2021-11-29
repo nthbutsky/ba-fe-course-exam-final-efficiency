@@ -5,11 +5,19 @@
         <v-col cols="auto" align="center">
           <v-form @submit.prevent="logIn">
             <p class="font-weight-black text-h4 primary--text">Login</p>
-            <v-text-field type="text" placeholder="email" v-model="email" />
+            <v-text-field
+              type="text"
+              placeholder="email"
+              v-model="email"
+              :rules="emailRules"
+              required
+            />
             <v-text-field
               type="password"
               placeholder="password"
               v-model="password"
+              :rules="passwordRules"
+              required
             />
             <v-btn block color="secondary" type="submit">login</v-btn>
             <v-col>
@@ -42,6 +50,15 @@ export default {
       email: "",
       password: "",
       error: "",
+      emailRules: [
+        (v) => !!v || "E-mail is required",
+        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+      ],
+      passwordRules: [
+        (v) => !!v || "Password is required",
+        (v) =>
+          (v && v.length >= 6) || "Password must be more than 5 characters",
+      ],
     };
   },
 

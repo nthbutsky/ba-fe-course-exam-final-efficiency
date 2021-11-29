@@ -23,7 +23,7 @@
 
           <v-list-item-content>
             <v-list-item-title>{{ menuItem.name }}</v-list-item-title>
-            <v-list-item-subtitle class="accent--text">{{
+            <v-list-item-subtitle class="primary--text">{{
               menuItem.text
             }}</v-list-item-subtitle>
           </v-list-item-content>
@@ -63,6 +63,12 @@
       <v-chip @click="colorPicker = true" class="ma-2" color="white" outlined>
         <v-avatar center>
           <v-icon>mdi-palette</v-icon>
+        </v-avatar>
+      </v-chip>
+
+      <v-chip @click="themeMode" class="ma-2" outlined color="white">
+        <v-avatar center>
+          <v-icon>mdi-theme-light-dark</v-icon>
         </v-avatar>
       </v-chip>
     </v-app-bar>
@@ -122,6 +128,7 @@
         </v-dialog>
       </v-row>
     </v-container>
+
     <v-container>
       <v-row justify="center">
         <v-dialog v-model="colorPicker" max-width="350">
@@ -150,11 +157,7 @@ export default {
         icon: "mdi-format-list-checks",
         link: "/todos",
       },
-      {
-        name: "Calendar",
-        icon: "mdi-calendar-clock",
-        link: "/calendar",
-      },
+
       {
         name: "Weather",
         icon: "mdi-weather-partly-cloudy",
@@ -164,6 +167,11 @@ export default {
         name: "News",
         icon: "mdi-newspaper",
         link: "/news",
+      },
+      {
+        name: "Calendar",
+        icon: "mdi-calendar-clock",
+        link: "/calendar",
       },
       {
         name: "Clocks",
@@ -232,6 +240,11 @@ export default {
   methods: {
     ...mapMutations(["setUser", "setUserName"]),
     ...mapActions(["signOutAction", "addUserName"]),
+
+    themeMode() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+      this.$vuetify.theme.themes.dark.secondary = "#2a73c5";
+    },
   },
 
   mounted() {
@@ -245,4 +258,10 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+#lateral .v-btn--example {
+  bottom: 0;
+  position: absolute;
+  margin: 0 0 16px 16px;
+}
+</style>

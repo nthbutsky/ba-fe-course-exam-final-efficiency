@@ -75,7 +75,7 @@ export default {
 
     LogInTest() {
       const user = {
-        email: "test@account.com",
+        email: "guest@account.com",
         password: 123456,
       };
       this.signInAction(user);

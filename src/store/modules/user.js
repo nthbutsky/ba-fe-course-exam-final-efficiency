@@ -102,7 +102,7 @@ export default {
           console.log(
             `USER ${response.user.email} HAS BEEN SUCCESFULLY LOGGED IN!`
           );
-          localStorage.setItem("userName", null);
+          localStorage.setItem("userName", response.user.email);
           localStorage.setItem("userUid", response.user.uid);
           localStorage.setItem("userEmail", response.user.email);
           router.push("/");

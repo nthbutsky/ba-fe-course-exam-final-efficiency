@@ -5,8 +5,8 @@ firebase.config.js
 weather.config.js
 news.config.js
 
-
-# local env files
+# env files
+.env
 .env.local
 .env.*.local
 

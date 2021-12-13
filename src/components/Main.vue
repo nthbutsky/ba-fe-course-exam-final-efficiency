@@ -52,7 +52,7 @@
       <v-spacer></v-spacer>
 
       <v-chip @click="nameChange = true" class="ma-2" outlined color="white">
-        {{ currentUser }}
+        {{ isUserName }}
         <v-avatar right>
           <v-icon>mdi-account-circle</v-icon>
         </v-avatar>
@@ -84,7 +84,7 @@
           <v-col align="center">
             <v-col class="text-h2">Welcome</v-col>
             <v-col class="text-h4">
-              {{ currentUser }}
+              {{ isUserName }}
             </v-col>
           </v-col>
         </v-row>
@@ -217,23 +217,19 @@ export default {
   }),
 
   computed: {
-    ...mapGetters(["user", "userName"]),
+    ...mapGetters(["user", "userName", "userEmail"]),
 
-    currentUser: function () {
-      if (this.userName === null || "") {
-        return this.user;
-      } else {
-        return this.userName;
-      }
-    },
-
-    currentColor: function () {
+    currentColor() {
       if (this.selectedColor === null) {
         return "secondary";
       } else {
         localStorage.setItem("color", this.selectedColor.hex);
         return this.selectedColor.hex;
       }
+    },
+
+    isUserName() {
+      return this.userName ? this.userName : this.userEmail;
     },
   },
 
@@ -245,15 +241,6 @@ export default {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
       this.$vuetify.theme.themes.dark.secondary = "#2a73c5";
     },
-  },
-
-  mounted() {
-    if (localStorage.getItem("user")) {
-      this.setUser(JSON.parse(localStorage.getItem("user")).email);
-    }
-    if (localStorage.getItem("name")) {
-      this.setUserName(localStorage.getItem("name"));
-    }
   },
 };
 </script>

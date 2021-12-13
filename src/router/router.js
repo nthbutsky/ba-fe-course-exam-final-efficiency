@@ -70,7 +70,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const guest = to.matched.some((record) => record.meta.guest);
-  const authenticatedUser = localStorage.getItem("user");
+  const authenticatedUser = localStorage.getItem("userUid");
 
   if (requiresAuth && !authenticatedUser) {
     next({

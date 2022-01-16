@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-row class="pa-5">
+    <v-row v-if="this.news" class="pa-5">
       <v-card
         elevation="12"
         v-for="(item, index) in news.results"
@@ -24,21 +24,23 @@
           {{ item.title }}
         </v-card-title>
 
-        <v-card-subtitle>
+        <v-card-subtitle class="mb-4">
           {{ item.abstract }}
         </v-card-subtitle>
-
-        <v-divider class="mx-4"></v-divider>
 
         <v-card-actions>
           <v-btn
             class="mx-auto"
             outlined
+            rounded
             color="secondary"
             text
+            absolute
+            bottom
+            right
             :href="item.url"
           >
-            Explore
+            Read more
           </v-btn>
         </v-card-actions>
       </v-card>

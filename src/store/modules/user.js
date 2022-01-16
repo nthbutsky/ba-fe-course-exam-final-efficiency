@@ -110,6 +110,7 @@ export default {
         .catch((error) => {
           commit("setStatus", "failure");
           commit("setError", error.message);
+          console.log("error: " + error);
         });
     },
 

@@ -31,7 +31,7 @@
               </v-col>
             </v-col>
             <v-col align="left">
-              <v-alert v-if="error" type="error">{{ error }}</v-alert>
+              <v-alert v-if="this.error" type="error">{{ this.error }}</v-alert>
             </v-col>
           </v-form>
         </v-col>
@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "UserLogin",
 
@@ -49,7 +49,6 @@ export default {
     return {
       email: "",
       password: "",
-      error: "",
       emailRules: [
         (v) => !!v || "E-mail is required",
         (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
@@ -60,6 +59,10 @@ export default {
           (v && v.length >= 6) || "Password must be more than 5 characters",
       ],
     };
+  },
+
+  computed: {
+    ...mapGetters(["error"]),
   },
 
   methods: {

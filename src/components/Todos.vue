@@ -1,21 +1,21 @@
 <template>
   <v-app>
-    <div v-if="this.todos">
-      <v-list flat class="pt-0">
-        <v-text-field
-          v-model="newTaskTitle"
-          @click:append="addTask"
-          @keyup.enter="addTask"
-          class="pa-3"
-          outlined
-          label="Add task"
-          append-icon="mdi-plus"
-          :placeholder="'e.g. ' + randomPlaceholder"
-          @focus="chooseRandomPlaceholder"
-          hide-details
-          clearable
-        ></v-text-field>
+    <v-list flat class="pt-0">
+      <v-text-field
+        v-model="newTaskTitle"
+        @click:append="addTask"
+        @keyup.enter="addTask"
+        class="pa-3"
+        outlined
+        label="Add task"
+        append-icon="mdi-plus"
+        :placeholder="'e.g. ' + randomPlaceholder"
+        @focus="chooseRandomPlaceholder"
+        hide-details
+        clearable
+      ></v-text-field>
 
+      <div v-if="this.todos">
         <div v-for="task in this.todos" :key="task.id">
           <v-list-item
             @click="doneTask(task.id)"
@@ -58,8 +58,8 @@
           </v-list-item>
           <v-divider></v-divider>
         </div>
-      </v-list>
-    </div>
+      </div>
+    </v-list>
 
     <template>
       <v-row justify="center">

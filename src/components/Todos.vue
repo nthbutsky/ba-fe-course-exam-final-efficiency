@@ -14,7 +14,7 @@
         hide-details
         clearable
       ></v-text-field>
-      <div v-for="task in tasks" :key="task.id">
+      <div v-for="task in this.todos" :key="task.id">
         <v-list-item
           @click="doneTask(task.id)"
           :class="{ 'grey lighten-3': task.done }"
@@ -68,7 +68,8 @@
             <v-text-field
               v-model="editedTask"
               class="pa-6"
-              label="Don't leave it empty, add some task!"
+              label="Edit some task!"
+              :rules="editTaskRules"
             ></v-text-field>
 
             <v-card-actions class="px-5">
@@ -88,14 +89,14 @@
 </template>
 
 <script>
-import { dbService } from "../api/firestore";
+import { mapActions, mapGetters } from "vuex";
+
 export default {
   name: "Todos",
 
   data() {
     return {
       newTaskTitle: "",
-      tasks: [],
       randomPlaceholder: "",
       placeholders: [
         "buy a helicopter",
@@ -108,10 +109,17 @@ export default {
       dialog: false,
       editedTask: "",
       editedTaskId: null,
+      editTaskRules: [(v) => (v && v.length > 0) || "Cannot be empty"],
     };
   },
 
+  computed: {
+    ...mapGetters(["todos"]),
+  },
+
   methods: {
+    ...mapActions(["getTodos", "addTodo", "updateTodo", "deleteTodo"]),
+
     chooseRandomPlaceholder() {
       const placeholdersArrSize = this.placeholders.length;
       const randomNumber = Math.floor(
@@ -121,9 +129,9 @@ export default {
     },
 
     doneTask(id) {
-      const task = this.tasks.filter((task) => task.id === id)[0];
+      const task = this.todos.filter((task) => task.id === id)[0];
       task.done = !task.done;
-      dbService.updateToDB(task);
+      this.updateTodo(task);
     },
 
     addTask() {
@@ -135,38 +143,39 @@ export default {
       if (this.newTaskTitle.length === 0) {
         return;
       } else {
-        this.tasks.push(newTask);
+        this.addTodo(newTask);
         this.newTaskTitle = "";
         this.chooseRandomPlaceholder();
-        dbService.addToDB(newTask);
       }
     },
 
     deleteTask(id) {
-      const taskToBeDeleted = this.tasks.filter((task) => task.id === id);
-      this.tasks = this.tasks.filter((task) => task.id !== id);
-      dbService.deleteToDB(taskToBeDeleted[0]);
+      const taskToBeDeleted = this.todos.filter((task) => task.id === id)[0];
+      this.deleteTodo(taskToBeDeleted);
     },
 
     editTask(id) {
       this.editedTaskId = id;
-      const editedTask = this.tasks.filter((task) => task.id === id)[0];
+      const editedTask = this.todos.filter((task) => task.id === id)[0];
       this.editedTask = editedTask.title;
     },
 
     confirmEdit() {
-      const confirmedEdit = this.tasks.filter(
-        (task) => task.id === this.editedTaskId
-      )[0];
-      confirmedEdit.title = this.editedTask;
-      this.dialog = false;
-      dbService.updateToDB(confirmedEdit);
+      if (this.editedTask.length === 0) {
+        return;
+      } else {
+        const confirmedEdit = this.todos.filter(
+          (task) => task.id === this.editedTaskId
+        )[0];
+        confirmedEdit.title = this.editedTask;
+        this.dialog = false;
+        this.updateTodo(confirmedEdit);
+      }
     },
   },
 
-  async mounted() {
-    const arrFromDB = await dbService.getFromDB();
-    this.tasks = arrFromDB;
+  mounted() {
+    this.getTodos();
   },
 };
 </script>

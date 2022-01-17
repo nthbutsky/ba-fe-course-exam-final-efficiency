@@ -60,19 +60,19 @@
 
             <v-card-text>
               <v-row align="center">
-                <v-col class="text-h1 pa-0 ma-0" cols="6" align="center"
+                <v-col class="text-h2 pa-0 ma-0" cols="6" align="center"
                   >{{ Math.floor(currentCityWeather.temp) }}&deg;C</v-col
                 >
                 <v-col class="pa-0 ma-0" cols="6">
-                  <v-img :src="currentWeatherIcon"></v-img>
+                  <v-img :src="currentWeatherIcon" width="200"></v-img>
                 </v-col>
               </v-row>
             </v-card-text>
 
             <v-row>
-              <v-col cols="6">
+              <v-col cols="4">
                 <v-list-item>
-                  <v-list-item-icon>
+                  <v-list-item-icon class="ma-0">
                     <v-img
                       width="80"
                       src="../assets/weather-icons/all/thermometer.svg"
@@ -90,9 +90,9 @@
                 </v-list-item>
               </v-col>
 
-              <v-col cols="6">
+              <v-col cols="4">
                 <v-list-item>
-                  <v-list-item-icon>
+                  <v-list-item-icon class="ma-0">
                     <v-img
                       width="80"
                       src="../assets/weather-icons/all/humidity.svg"
@@ -109,12 +109,10 @@
                   >
                 </v-list-item>
               </v-col>
-            </v-row>
 
-            <v-row>
-              <v-col cols="6">
+              <v-col cols="4">
                 <v-list-item>
-                  <v-list-item-icon>
+                  <v-list-item-icon class="ma-0">
                     <v-img
                       width="80"
                       src="../assets/weather-icons/all/windsock.svg"
@@ -129,29 +127,10 @@
                       </v-col>
                     </v-row></v-list-item-subtitle
                   >
-                </v-list-item></v-col
-              >
-
-              <v-col cols="6">
-                <v-list-item>
-                  <v-list-item-icon>
-                    <v-img
-                      width="80"
-                      src="../assets/weather-icons/all/barometer.svg"
-                    >
-                    </v-img>
-                  </v-list-item-icon>
-                  <v-list-item-subtitle class="text-h5"
-                    >{{ Math.floor(currentCityWeather.pressure) }}
-                    <v-row>
-                      <v-col>
-                        <v-list-item-subtitle>Pressure</v-list-item-subtitle>
-                      </v-col>
-                    </v-row></v-list-item-subtitle
-                  >
                 </v-list-item>
               </v-col>
             </v-row>
+
             <v-list class="transparent">
               <v-list-item
                 v-for="(dailyWeatherItem, index) in forecast.slice(0, 5)"
@@ -166,7 +145,7 @@
                   </v-list-item-title>
                 </v-col>
 
-                <v-list-item-icon>
+                <v-list-item-icon class="ma-0">
                   <v-img width="100" :src="weatherForecastIcon[index]"></v-img>
                 </v-list-item-icon>
 

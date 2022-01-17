@@ -1,62 +1,66 @@
 <template>
   <v-app>
-    <v-list flat class="pt-0">
-      <v-text-field
-        v-model="newTaskTitle"
-        @click:append="addTask"
-        @keyup.enter="addTask"
-        class="pa-3"
-        outlined
-        label="Add task"
-        append-icon="mdi-plus"
-        :placeholder="'e.g. ' + randomPlaceholder"
-        @focus="chooseRandomPlaceholder"
-        hide-details
-        clearable
-      ></v-text-field>
-      <div v-for="task in this.todos" :key="task.id">
-        <v-list-item
-          @click="doneTask(task.id)"
-          :class="{ 'grey lighten-3': task.done }"
-        >
-          <template v-slot:default>
-            <v-list-item-action class="mr-4" :class="{ hidden: task.done }">
-              <v-btn @click.stop="editTask(task.id), (dialog = true)" icon>
-                <v-icon color="secondary">mdi-pencil-outline</v-icon>
-              </v-btn>
-            </v-list-item-action>
+    <div v-if="this.todos">
+      <v-list flat class="pt-0">
+        <v-text-field
+          v-model="newTaskTitle"
+          @click:append="addTask"
+          @keyup.enter="addTask"
+          class="pa-3"
+          outlined
+          label="Add task"
+          append-icon="mdi-plus"
+          :placeholder="'e.g. ' + randomPlaceholder"
+          @focus="chooseRandomPlaceholder"
+          hide-details
+          clearable
+        ></v-text-field>
 
-            <v-list-item-action
-              class="hidden mr-7"
-              :class="{ visible: task.done }"
-            >
-              <v-checkbox
-                class="hidden"
-                :input-value="task.done"
-                color="secondary"
+        <div v-for="task in this.todos" :key="task.id">
+          <v-list-item
+            @click="doneTask(task.id)"
+            :class="{ 'grey lighten-3': task.done }"
+          >
+            <template v-slot:default>
+              <v-list-item-action class="mr-4" :class="{ hidden: task.done }">
+                <v-btn @click.stop="editTask(task.id), (dialog = true)" icon>
+                  <v-icon color="secondary">mdi-pencil-outline</v-icon>
+                </v-btn>
+              </v-list-item-action>
+
+              <v-list-item-action
+                class="hidden mr-7"
                 :class="{ visible: task.done }"
-              ></v-checkbox>
-            </v-list-item-action>
-
-            <v-list-item-content>
-              <v-list-item-title
-                :class="{ 'text-decoration-line-through ': task.done }"
-                >{{ task.title }}</v-list-item-title
               >
-            </v-list-item-content>
+                <v-checkbox
+                  class="hidden"
+                  :input-value="task.done"
+                  color="secondary"
+                  :class="{ visible: task.done }"
+                ></v-checkbox>
+              </v-list-item-action>
 
-            <v-list-item-action>
-              <v-btn @click.stop="deleteTask(task.id)" icon>
-                <v-icon color="secondary lighten-1"
-                  >mdi-trash-can-outline</v-icon
+              <v-list-item-content>
+                <v-list-item-title
+                  :class="{ 'text-decoration-line-through ': task.done }"
+                  >{{ task.title }}</v-list-item-title
                 >
-              </v-btn>
-            </v-list-item-action>
-          </template>
-        </v-list-item>
-        <v-divider></v-divider>
-      </div>
-    </v-list>
+              </v-list-item-content>
+
+              <v-list-item-action>
+                <v-btn @click.stop="deleteTask(task.id)" icon>
+                  <v-icon color="secondary lighten-1"
+                    >mdi-trash-can-outline</v-icon
+                  >
+                </v-btn>
+              </v-list-item-action>
+            </template>
+          </v-list-item>
+          <v-divider></v-divider>
+        </div>
+      </v-list>
+    </div>
+
     <template>
       <v-row justify="center">
         <v-dialog v-model="dialog" max-width="290">

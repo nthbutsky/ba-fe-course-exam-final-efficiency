@@ -38,8 +38,8 @@ export default {
   },
 
   actions: {
-    async getTodos({ commit }) {
-      const dbDocs = collection(db, "todos");
+    async getTodos({ commit, rootState }) {
+      const dbDocs = collection(db, `users/${rootState.users.user.uid}/todos`);
 
       try {
         const querySnapshot = await getDocs(dbDocs);
@@ -59,8 +59,12 @@ export default {
       }
     },
 
-    async addTodo({ commit }, payload) {
-      const dbDoc = doc(db, "todos", `${payload.id}`);
+    async addTodo({ commit, rootState }, payload) {
+      const dbDoc = doc(
+        db,
+        `users/${rootState.users.user.uid}/todos`,
+        `${payload.id}`
+      );
       try {
         await setDoc(dbDoc, {
           id: payload.id,
@@ -73,8 +77,12 @@ export default {
       }
     },
 
-    async updateTodo({ commit }, payload) {
-      const dbDoc = doc(db, "todos", `${payload.id}`);
+    async updateTodo({ commit, rootState }, payload) {
+      const dbDoc = doc(
+        db,
+        `users/${rootState.users.user.uid}/todos`,
+        `${payload.id}`
+      );
       try {
         await updateDoc(dbDoc, payload);
         commit("UPDATE_TODO", payload);
@@ -83,8 +91,12 @@ export default {
       }
     },
 
-    async deleteTodo({ commit }, payload) {
-      const dbDoc = doc(db, "todos", `${payload.id}`);
+    async deleteTodo({ commit, rootState }, payload) {
+      const dbDoc = doc(
+        db,
+        `users/${rootState.users.user.uid}/todos`,
+        `${payload.id}`
+      );
       try {
         await deleteDoc(dbDoc);
         commit("DELETE_TODO", payload);

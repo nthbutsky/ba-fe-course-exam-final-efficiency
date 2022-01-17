@@ -114,7 +114,7 @@ export default {
         });
     },
 
-    signOutAction({ commit }) {
+    signOutAction({ commit, rootState }) {
       signOut(getAuth(app))
         .then(() => {
           commit("setUser", null);
@@ -123,6 +123,7 @@ export default {
           localStorage.clear("user");
           console.log("USER LOGGED OUT!");
           router.push("/login");
+          rootState.todos.todos = null;
         })
         .catch((error) => {
           commit("setStatus", "failure");

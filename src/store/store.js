@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import user from "./modules/user";
+import users from "./modules/users";
 import todos from "./modules/todos";
 import weather from "./modules/weather";
 import news from "./modules/news";
@@ -9,7 +9,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
-    user,
+    users,
     todos,
     weather,
     news,

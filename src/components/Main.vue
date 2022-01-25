@@ -96,7 +96,7 @@
         </v-row>
       </v-container>
     </v-main>
-    <v-container>
+    <v-container v-if="nameChange">
       <v-row justify="center">
         <v-dialog v-model="nameChange" max-width="350">
           <v-card>
@@ -129,7 +129,7 @@
       </v-row>
     </v-container>
 
-    <v-container>
+    <v-container v-if="colorPicker">
       <v-row justify="center">
         <v-dialog v-model="colorPicker" max-width="350">
           <v-color-picker

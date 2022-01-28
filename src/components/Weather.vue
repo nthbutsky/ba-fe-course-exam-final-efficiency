@@ -13,8 +13,14 @@
               ref="searchCityInput"
               max-width="600"
               v-model="cityQuery"
-              @click:append="searchCityWeather(cityQuery), clearSearch()"
-              @keyup.enter="searchCityWeather(cityQuery), clearSearch()"
+              @click:append="
+                searchCityWeather(cityQuery);
+                clearSearch();
+              "
+              @keyup.enter="
+                searchCityWeather(cityQuery);
+                clearSearch();
+              "
               class="pa-3"
               outlined
               label="Search your place"
@@ -268,9 +274,7 @@ export default {
 
     chooseRandomPlaceholder() {
       const placeholdersArrSize = this.placeholders.length;
-      const randomNumber = Math.floor(
-        Math.random() * (placeholdersArrSize - 0) + 0
-      );
+      const randomNumber = Math.floor(Math.random() * placeholdersArrSize);
       this.randomPlaceholder = this.placeholders[randomNumber];
     },
 
@@ -280,8 +284,7 @@ export default {
     },
 
     firstLetterToUpperCase(e) {
-      const result = e[0].toUpperCase() + e.slice(1);
-      return result;
+      return e[0].toUpperCase() + e.slice(1);
     },
   },
 

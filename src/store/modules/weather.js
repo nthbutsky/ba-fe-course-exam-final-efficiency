@@ -48,7 +48,7 @@ export default {
         const ipUrlBase = "https://api.ipdata.co";
         const ipResponse = await fetch(`${ipUrlBase}?api-key=${ipApiKey}`);
         const ipData = await ipResponse.json();
-        // console.log(ipData);
+        console.log(ipData);
         lat = await ipData.latitude;
         lon = await ipData.longitude;
         commit("setCurrentCity", ipData.city);
@@ -87,7 +87,7 @@ export default {
         const weatherData = await weatherResponse.json();
         lat = weatherData.coord.lat;
         lon = weatherData.coord.lon;
-        // console.log(weatherData);
+        console.log(weatherData);
         commit("setCurrentCity", payload);
         commit("setCurrentCityWeather", weatherData);
       } catch (error) {

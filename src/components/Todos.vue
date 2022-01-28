@@ -23,7 +23,13 @@
           >
             <template v-slot:default>
               <v-list-item-action class="mr-4" :class="{ hidden: task.done }">
-                <v-btn @click.stop="editTask(task.id), (dialog = true)" icon>
+                <v-btn
+                  @click.stop="
+                    editTask(task.id);
+                    dialog = true;
+                  "
+                  icon
+                >
                   <v-icon color="secondary">mdi-pencil-outline</v-icon>
                 </v-btn>
               </v-list-item-action>
@@ -126,9 +132,7 @@ export default {
 
     chooseRandomPlaceholder() {
       const placeholdersArrSize = this.placeholders.length;
-      const randomNumber = Math.floor(
-        Math.random() * (placeholdersArrSize - 0) + 0
-      );
+      const randomNumber = Math.floor(Math.random() * placeholdersArrSize);
       this.randomPlaceholder = this.placeholders[randomNumber];
     },
 
@@ -144,9 +148,7 @@ export default {
         title: this.newTaskTitle,
         done: false,
       };
-      if (this.newTaskTitle.length === 0) {
-        return;
-      } else {
+      if (this.newTaskTitle.length !== 0) {
         this.addTodo(newTask);
         this.newTaskTitle = "";
         this.chooseRandomPlaceholder();
@@ -165,9 +167,7 @@ export default {
     },
 
     confirmEdit() {
-      if (this.editedTask.length === 0) {
-        return;
-      } else {
+      if (this.editedTask.length !== 0) {
         const confirmedEdit = this.todos.filter(
           (task) => task.id === this.editedTaskId
         )[0];

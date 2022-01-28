@@ -211,7 +211,7 @@ import {
   deleteDoc,
   collection,
 } from "firebase/firestore";
-import { db } from "../api/firebase";
+import { db } from "@/api/firebase";
 
 export default {
   data: () => ({
@@ -312,12 +312,12 @@ export default {
           end: this.end,
           color: this.color,
         });
-        this.getEvents();
-        (this.name = ""),
-          (this.details = ""),
-          (this.start = ""),
-          (this.end = ""),
-          (this.color = "");
+        await this.getEvents();
+        this.name = "";
+        this.details = "";
+        this.start = "";
+        this.end = "";
+        this.color = "";
       } else {
         alert("You must enter event name, start, and end time");
       }
@@ -329,11 +329,13 @@ export default {
       await updateDoc(doc(db, "events", this.currentlyEditing), {
         details: ev.details,
       });
-      (this.selectedOpen = false), (this.currentlyEditing = null);
+      this.selectedOpen = false;
+      this.currentlyEditing = null;
     },
     async deleteEvent(ev) {
       await deleteDoc(doc(db, "events", ev));
-      (this.selectedOpen = false), this.getEvents();
+      this.selectedOpen = false;
+      await this.getEvents();
     },
     showEvent({ nativeEvent, event }) {
       const open = () => {

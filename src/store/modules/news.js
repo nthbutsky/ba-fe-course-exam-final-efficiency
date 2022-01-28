@@ -12,7 +12,7 @@ export default {
   },
 
   actions: {
-    async getNews({ commit }) {
+    async getNews() {
       try {
         const apiKey = newsApiKey;
         const newsResponse = await fetch(

@@ -103,7 +103,10 @@
             <v-card-title class="text-h6">Please add/change name</v-card-title>
 
             <v-text-field
-              @keyup.enter="addUserName(newUserName), (nameChange = false)"
+              @keyup.enter="
+                addUserName(newUserName);
+                nameChange = false;
+              "
               v-model="newUserName"
               class="pa-6"
               label="Choose any name you want!"
@@ -119,7 +122,10 @@
               <v-btn
                 color="primary"
                 text
-                @click="addUserName(newUserName), (nameChange = false)"
+                @click="
+                  addUserName(newUserName);
+                  nameChange = false;
+                "
               >
                 Done
               </v-btn>

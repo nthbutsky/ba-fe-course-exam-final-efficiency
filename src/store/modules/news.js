@@ -1,4 +1,4 @@
-import { newsApiKey } from "../../api/news.config";
+import { newsApiKey } from "@/api/news.config";
 
 export default {
   state: { news: null },
@@ -12,12 +12,11 @@ export default {
   },
 
   actions: {
-    async getNews() {
+    async getNews({ commit }) {
       try {
-        const apiKey = newsApiKey;
         const newsResponse = await fetch(
           "https://api.nytimes.com/svc/topstories/v2/home.json?api-key=" +
-            apiKey
+            newsApiKey
         );
         const newsData = await newsResponse.json();
         commit("setNews", newsData);

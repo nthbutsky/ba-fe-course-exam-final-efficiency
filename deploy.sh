@@ -10,6 +10,6 @@ cd dist
 git init
 git add -A
 git commit -m 'deploy'
-git push -f git@github.com:nthbutsky/ba-fe-course-exam-final-efficiency.git chief:gh-pages
+git push -f git@github.com:nthbutsky/efficiency-app.git chief:gh-pages
 cd -
 rm -rf dist

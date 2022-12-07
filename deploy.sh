@@ -12,3 +12,4 @@ git add -A
 git commit -m 'deploy'
 git push -f git@github.com:nthbutsky/ba-fe-course-exam-final-efficiency.git chief:gh-pages
 cd -
+rm -rf dist

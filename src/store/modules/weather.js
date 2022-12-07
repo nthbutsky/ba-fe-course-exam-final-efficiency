@@ -1,4 +1,9 @@
-import { getIP, getCurrentWeather, getCityWeather } from "@/api/weather";
+import {
+  getIP,
+  getCurrentWeather,
+  getCityWeather,
+  getForecast,
+} from "@/api/weather";
 
 export default {
   state: {
@@ -39,11 +44,10 @@ export default {
   actions: {
     async getCurrentCityWeather({ commit }) {
       const ip = await getIP();
-      if (ip.message) console.log(ip);
       commit("SET_CURRENT_CITY", ip.city);
       const currentWeather = await getCurrentWeather(ip.latitude, ip.longitude);
-      commit("SET_CURRENT_CITY_WEATHER", currentWeather.current);
-      commit("SET_FORECAST", currentWeather.daily);
+      commit("SET_CURRENT_CITY_WEATHER", currentWeather);
+      console.log(currentWeather);
     },
 
     async searchCityWeather({ commit }, payload) {
@@ -52,10 +56,14 @@ export default {
         cityWeather.coord.lat,
         cityWeather.coord.lon
       );
-
       commit("SET_CURRENT_CITY", payload);
-      commit("SET_CURRENT_CITY_WEATHER", currentWeather.current);
-      commit("SET_FORECAST", currentWeather.daily);
+      commit("SET_CURRENT_CITY_WEATHER", currentWeather);
+    },
+
+    async getCurrentForecast({ commit }) {
+      const ip = await getIP();
+      const cityForecast = await getForecast(ip.latitude, ip.longitude);
+      commit("SET_FORECAST", cityForecast);
     },
   },
 };

@@ -4,6 +4,7 @@ node_modules
 firebase.config.js
 weather.config.js
 news.config.js
+deploy.sh
 
 # env files
 .env
